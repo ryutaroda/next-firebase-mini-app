@@ -24,7 +24,11 @@ if (!getApps()?.length) {
 }
 
 // 他ファイルで使うために機能をエクスポート
-export const analytics = getAnalytics();
+const app = initializeApp(firebaseConfig);
+export const analytics =
+process.env.NODE_ENV === "production" && typeof window !== "undefined"
+  ? getAnalytics(app)
+  : undefined;
 export const db = getFirestore();
 export const storage = getStorage();
 export const auth = getAuth();
