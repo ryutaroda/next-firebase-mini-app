@@ -1,0 +1,36 @@
+import { useAuth } from "@/context/auth";
+import Link from "next/link"
+import { useState } from 'react';
+import { login } from '../lib/auth';
+
+const Header = () => {
+  const user = useAuth();
+  const [waiting, setWaiting] = useState(true);
+
+  const signIn = () => {
+    setWaiting(true);
+
+    login()
+      .catch((error) => {
+        console.error(error?.code);
+      }
+      ).finally(() => {
+        setWaiting(false);
+      });
+  };
+
+  return (
+    <header className="border-b flex items-center h-14 px-4">
+      <h1>
+        <Link href="/" legacyBehavior>
+          <a className="text-2xl font-logo">iam</a>
+        </Link>
+      </h1>
+      <span className="flex-1"></span>
+      {user === null && !waiting && <button className="font-logo" onClick={signIn}>Login</button>}
+      {user && <button className="font-logo">User Menu</button>}
+    </header>
+  );
+};
+
+export default Header;
