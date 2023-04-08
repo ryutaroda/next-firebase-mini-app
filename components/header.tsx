@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useState } from 'react';
 import { login, logout } from '../lib/auth';
 import Button from './button';
+import UserMenu from "./user-menu";
 
 const Header = () => {
   const user = useAuth();
@@ -24,18 +25,6 @@ const Header = () => {
       });
   };
 
-  const signOut = () => {
-    setWaiting(true);
-
-    logout()
-      .catch((error) => {
-        console.error(error?.code);
-      }
-      ).finally(() => {
-        setWaiting(false);
-      });
-  };
-
   return (
     <header className="border-b flex items-center h-14 px-4">
       <h1>
@@ -44,9 +33,8 @@ const Header = () => {
         </Link>
       </h1>
       <span className="flex-1"></span>
-      {/* {user === null && !waiting && <Button onClick={signIn}>Login</Button>} */}
       {user === null && <Button onClick={signIn}>Login</Button>}
-      {user && <button className="font-logo" onClick={signOut}>User Menu</button>}
+      {user && <UserMenu />}
     </header>
   );
 };
