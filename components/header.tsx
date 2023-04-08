@@ -1,16 +1,33 @@
 import { useAuth } from "@/context/auth";
 import Link from "next/link"
 import { useState } from 'react';
-import { login } from '../lib/auth';
+import { login, logout } from '../lib/auth';
+import Button from './button';
 
 const Header = () => {
   const user = useAuth();
+  console.log(user);
+
   const [waiting, setWaiting] = useState(true);
+  console.log('waiting:' + waiting);
+
 
   const signIn = () => {
     setWaiting(true);
 
     login()
+      .catch((error) => {
+        console.error(error?.code);
+      }
+      ).finally(() => {
+        setWaiting(false);
+      });
+  };
+
+  const signOut = () => {
+    setWaiting(true);
+
+    logout()
       .catch((error) => {
         console.error(error?.code);
       }
@@ -27,8 +44,9 @@ const Header = () => {
         </Link>
       </h1>
       <span className="flex-1"></span>
-      {user === null && !waiting && <button className="font-logo" onClick={signIn}>Login</button>}
-      {user && <button className="font-logo">User Menu</button>}
+      {/* {user === null && !waiting && <Button onClick={signIn}>Login</Button>} */}
+      {user === null && <Button onClick={signIn}>Login</Button>}
+      {user && <button className="font-logo" onClick={signOut}>User Menu</button>}
     </header>
   );
 };
